@@ -1,0 +1,31 @@
+services:
+  - type: web
+    name: stock-backend
+    env: node
+    region: oregon
+    repo: <YOUR_GITHUB_REPO_URL>      # replace with your repository URL
+    branch: main
+    plan: free
+    buildCommand: |
+      cd backend && npm install
+    startCommand: |
+      cd backend && npm start
+    envVars:
+      - key: JWT_SECRET
+        value: "change_this_to_a_strong_secret"
+      - key: MONGO_URI
+        value: ""          # leave empty; mock DB is used
+  - type: web
+    name: stock-frontend
+    env: node
+    region: oregon
+    repo: <YOUR_GITHUB_REPO_URL>      # same repo as above
+    branch: main
+    plan: free
+    buildCommand: |
+      cd frontend && npm install && npm run build
+    startCommand: |
+      cd frontend && npx serve -s build -l $PORT
+    envVars:
+      - key: REACT_APP_API_URL
+        value: "https://stock-backend.onrender.com/api" # update after backend URL is known
